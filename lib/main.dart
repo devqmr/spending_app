@@ -3,6 +3,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:spending_app/NewTransaction.dart';
 import 'package:spending_app/model/Transaction.dart';
 
+import 'TransactionsList.dart';
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -31,7 +33,22 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
-  List<Transaction> transactionsList = new List<Transaction>();
+//  List<Transaction> transactionsList = new List<Transaction>();
+
+  List<Transaction> transactionsList = [new Transaction(title: "AAA",
+      amount: 99.9,
+      dateTime: DateTime.now(),
+      id: DateTime.now().toString()),
+    new Transaction(title: "BBB",
+        amount: 888.8,
+        dateTime: DateTime.now(),
+        id: DateTime.now().toString()),
+    new Transaction(title: "CCC",
+        amount: 77.7,
+        dateTime: DateTime.now(),
+        id: DateTime.now().toString())
+  ];
+
 
   void _showAddTransaction(context) {
     showModalBottomSheet(
@@ -40,8 +57,10 @@ class _MyHomePageState extends State<MyHomePage> {
           return GestureDetector(
             onTap: () {},
             child: NewTransaction((Transaction transaction) {
-              showToast("Add Transaction From Main > \n $transaction");
-              transactionsList.add(transaction);
+              setState(() {
+                showToast("Add Transaction From Main > \n $transaction");
+                transactionsList.add(transaction);
+              });
             }),
             behavior: HitTestBehavior.opaque,
           );
@@ -66,18 +85,7 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.display1,
-            ),
-          ],
-        ),
+        child: TransactionsList(transactionsList, deleteTransaction),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -87,5 +95,13 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Icon(Icons.add),
       ),
     );
+  }
+
+
+  void deleteTransaction(int index) {
+    setState(() {
+      showToast("$index");
+      transactionsList.removeAt(index);
+    });
   }
 }
